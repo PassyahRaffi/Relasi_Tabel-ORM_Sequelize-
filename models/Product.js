@@ -1,4 +1,3 @@
-// backend/models/Product.js
 const { DataTypes } = require("sequelize");
 const sequelize = require("../db");
 
@@ -7,12 +6,12 @@ const Product = sequelize.define(
   {
     id: {
       type: DataTypes.INTEGER,
-      primaryKey: true,
       autoIncrement: true,
+      primaryKey: true,
     },
 
     name: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(200),
       allowNull: false,
     },
 
@@ -21,8 +20,18 @@ const Product = sequelize.define(
       allowNull: true,
     },
 
-    price: {
+    brand_id: {
       type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+
+    category_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+
+    price: {
+      type: DataTypes.BIGINT,
       allowNull: false,
     },
 
@@ -37,16 +46,6 @@ const Product = sequelize.define(
       allowNull: true,
     },
 
-    category_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-
-    brand_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-
     created_at: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
@@ -59,7 +58,7 @@ const Product = sequelize.define(
   },
   {
     tableName: "products",
-    timestamps: false, // Karena kamu pakai created_at / updated_at manual
+    timestamps: false,
   }
 );
 
