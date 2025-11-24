@@ -1,21 +1,15 @@
 // backend/sync.js
 const sequelize = require("./db");
-require("./models"); // memuat SEMUA model + relasi dari models/index.js
+require("./models"); // penting! ini yang load semua relasi
 
-async function syncDatabase() {
+(async () => {
   try {
     console.log("⏳ Syncing database...");
-
-    await sequelize.sync({ alter: true }); 
-    // alter: true = update tabel tanpa menghapus data
-    // force: true = DROP ALL TABLES lalu buat baru (HATI-HATI)
-
-    console.log("✅ Database synchronized with all tables & relations!");
+    await sequelize.sync({ alter: true });
+    console.log("✅ All tables synced with latest relations!");
     process.exit();
-  } catch (error) {
-    console.error("❌ Failed to sync database:", error);
+  } catch (err) {
+    console.error("❌ Sync error:", err);
     process.exit(1);
   }
-}
-
-syncDatabase();
+})();

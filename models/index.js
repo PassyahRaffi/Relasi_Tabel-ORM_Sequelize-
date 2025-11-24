@@ -79,4 +79,3 @@ module.exports = {
   Payment,
   Shipment,
 };
-F
