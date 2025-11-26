@@ -24,11 +24,18 @@ const Order = sequelize.define(
       allowNull: false, // setiap order harus dimiliki oleh 1 user
     },
 
-    // Status pesanan (pending, paid, shipped, delivered, canceled, dll.)
+    // Status pesanan memakai ENUM agar hanya boleh salah satu dari nilai ini
     status: {
-      type: DataTypes.STRING(20),
+      type: DataTypes.ENUM(
+        "PENDING",
+        "PAID",
+        "SHIPPED",
+        "DELIVERED",
+        "COMPLETED",
+        "CANCELED"
+      ),
       allowNull: false,
-      defaultValue: "pending", // status pertama saat order dibuat
+      defaultValue: "PENDING", // status default saat order baru dibuat
     },
 
     // Total harga semua produk dalam order
