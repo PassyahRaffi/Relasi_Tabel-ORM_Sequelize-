@@ -26,8 +26,8 @@ const User = sequelize.define(
     // Kolom nama panggilan
     nickname: {
       type: DataTypes.STRING(100),
-      allowNull: true,
-      // kalau mau tidak boleh duplikat → tambahkan unique: true
+      allowNull: false, // wajib diisi
+      unique: true,  // tidak boleh duplikat antara user
     },
 
     // Kolom email
