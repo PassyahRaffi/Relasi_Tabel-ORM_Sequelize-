@@ -32,7 +32,13 @@ const Payment = sequelize.define(
 
     // Status pembayaran (pending, paid, failed, refunded, expired)
     status: {
-      type: DataTypes.STRING(20),
+      type: DataTypes.ENUM(
+        "PENDING",   // menunggu pembayaran
+        "PAID",      // pembayaran berhasil
+        "FAILED",    // gagal diproses provider
+        "EXPIRED",   // waktu pembayaran habis / timeout
+        "REFUNDED"   // dana dikembalikan
+      ),
       allowNull: false,
       defaultValue: "PENDING", // default saat order baru dibuat
     },
