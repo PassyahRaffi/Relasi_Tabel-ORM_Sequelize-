@@ -1,8 +1,8 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../db");
 
-const Category = sequelize.define(
-  "Category",
+const ProductMedia = sequelize.define(
+  "ProductMedia",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -10,20 +10,25 @@ const Category = sequelize.define(
       primaryKey: true,
     },
 
-    name: {
-      type: DataTypes.STRING(100),
+    product_id: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
 
-    slug: {
-      type: DataTypes.STRING(120),
-      allowNull: true,
+    media_type: {
+      type: DataTypes.STRING(20),
+      allowNull: false,
+    },
+
+    url: {
+      type: DataTypes.TEXT,
+      allowNull: false,
     },
   },
   {
-    tableName: "categories",
+    tableName: "product_media",
     timestamps: false,
   }
 );
 
-module.exports = Category;
+module.exports = ProductMedia;
