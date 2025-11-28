@@ -1,8 +1,11 @@
-// Import instance koneksi Sequelize
+// =========================
+// 📌 IMPORT KONEKSI + MODELS
+// =========================
 const sequelize = require("../db");
 
 // Import semua model
 const User = require("./User");
+const UserAddress = require("./UserAddress");
 const Category = require("./Category");
 const Brand = require("./Brand");
 const Product = require("./Product");
@@ -14,87 +17,149 @@ const OrderItem = require("./OrderItem");
 const Payment = require("./Payment");
 const Shipment = require("./Shipment");
 
-/* ============================================================
-   🔗 DEFINISI RELASI ANTAR MODEL (ERD DALAM BENTUK SEQUELIZE)
-   Catatan penting:
-   - hasMany   → 1 ke banyak
-   - belongsTo → banyak ke 1
-   - hasOne    → 1 ke 1
-============================================================ */
+// ============================================================
+// 🔗 DEFINISI RELASI ANTAR MODEL (ASSOCIATIONS)
+// ============================================================
 
-/* ============================
-   CATEGORY 1 ---> MANY PRODUCTS
-============================ */
-Category.hasMany(Product, { foreignKey: "category_id" });
-Product.belongsTo(Category, { foreignKey: "category_id" });
+// ------------------------------------------------------------
+// USER → USER ADDRESSES (1 : Many)
+// ------------------------------------------------------------
+User.hasMany(UserAddress, {
+  foreignKey: "user_id",
+  onDelete: "CASCADE",
+});
+UserAddress.belongsTo(User, {
+  foreignKey: "user_id",
+});
 
-/* ============================
-   BRAND 1 ---> MANY PRODUCTS
-============================ */
-Brand.hasMany(Product, { foreignKey: "brand_id" });
-Product.belongsTo(Brand, { foreignKey: "brand_id" });
+// ------------------------------------------------------------
+// CATEGORY → PRODUCTS (1 : Many)
+// ------------------------------------------------------------
+Category.hasMany(Product, {
+  foreignKey: "category_id",
+  onDelete: "CASCADE",
+});
+Product.belongsTo(Category, {
+  foreignKey: "category_id",
+});
 
-/* ============================================
-   PRODUCT 1 ---> MANY PRODUCT MEDIA (gallery)
-============================================ */
-Product.hasMany(ProductMedia, { foreignKey: "product_id" });
-ProductMedia.belongsTo(Product, { foreignKey: "product_id" });
+// ------------------------------------------------------------
+// BRAND → PRODUCTS (1 : Many)
+// ------------------------------------------------------------
+Brand.hasMany(Product, {
+  foreignKey: "brand_id",
+  onDelete: "CASCADE",
+});
+Product.belongsTo(Brand, {
+  foreignKey: "brand_id",
+});
 
-/* ============================
-   USER 1 ---> 1 CART
-   (satu user hanya punya satu keranjang aktif)
-============================ */
-User.hasOne(Cart, { foreignKey: "user_id" });
-Cart.belongsTo(User, { foreignKey: "user_id" });
+// ------------------------------------------------------------
+// PRODUCT → PRODUCT MEDIA (1 : Many)
+// ------------------------------------------------------------
+Product.hasMany(ProductMedia, {
+  foreignKey: "product_id",
+  onDelete: "CASCADE",
+});
+ProductMedia.belongsTo(Product, {
+  foreignKey: "product_id",
+});
 
-/* ============================
-   CART 1 ---> MANY CART ITEMS
-============================ */
-Cart.hasMany(CartItem, { foreignKey: "cart_id" });
-CartItem.belongsTo(Cart, { foreignKey: "cart_id" });
+// ------------------------------------------------------------
+// USER → CART (1 : 1)
+// ------------------------------------------------------------
+User.hasOne(Cart, {
+  foreignKey: "user_id",
+  onDelete: "CASCADE",
+});
+Cart.belongsTo(User, {
+  foreignKey: "user_id",
+});
 
-/* ============================
-   PRODUCT 1 ---> MANY CART ITEMS
-============================ */
-Product.hasMany(CartItem, { foreignKey: "product_id" });
-CartItem.belongsTo(Product, { foreignKey: "product_id" });
+// ------------------------------------------------------------
+// CART → CART ITEMS (1 : Many)
+// ------------------------------------------------------------
+Cart.hasMany(CartItem, {
+  foreignKey: "cart_id",
+  onDelete: "CASCADE",
+});
+CartItem.belongsTo(Cart, {
+  foreignKey: "cart_id",
+});
 
-/* ============================
-   USER 1 ---> MANY ORDERS
-============================ */
-User.hasMany(Order, { foreignKey: "user_id" });
-Order.belongsTo(User, { foreignKey: "user_id" });
+// ------------------------------------------------------------
+// PRODUCT → CART ITEMS (1 : Many)
+// ------------------------------------------------------------
+Product.hasMany(CartItem, {
+  foreignKey: "product_id",
+  onDelete: "CASCADE",
+});
+CartItem.belongsTo(Product, {
+  foreignKey: "product_id",
+});
 
-/* ============================
-   ORDER 1 ---> MANY ORDER ITEMS
-============================ */
-Order.hasMany(OrderItem, { foreignKey: "order_id" });
-OrderItem.belongsTo(Order, { foreignKey: "order_id" });
+// ------------------------------------------------------------
+// USER → ORDERS (1 : Many)
+// ------------------------------------------------------------
+User.hasMany(Order, {
+  foreignKey: "user_id",
+  onDelete: "SET NULL",
+});
+Order.belongsTo(User, {
+  foreignKey: "user_id",
+});
 
-/* ============================
-   PRODUCT 1 ---> MANY ORDER ITEMS
-============================ */
-Product.hasMany(OrderItem, { foreignKey: "product_id" });
-OrderItem.belongsTo(Product, { foreignKey: "product_id" });
+// ------------------------------------------------------------
+// ORDER → ORDER ITEMS (1 : Many)
+// ------------------------------------------------------------
+Order.hasMany(OrderItem, {
+  foreignKey: "order_id",
+  onDelete: "CASCADE",
+});
+OrderItem.belongsTo(Order, {
+  foreignKey: "order_id",
+});
 
-/* ============================
-   ORDER 1 ---> 1 PAYMENT
-============================ */
-Order.hasOne(Payment, { foreignKey: "order_id" });
-Payment.belongsTo(Order, { foreignKey: "order_id" });
+// ------------------------------------------------------------
+// PRODUCT → ORDER ITEMS (1 : Many)
+// ------------------------------------------------------------
+Product.hasMany(OrderItem, {
+  foreignKey: "product_id",
+  onDelete: "SET NULL",
+});
+OrderItem.belongsTo(Product, {
+  foreignKey: "product_id",
+});
 
-/* ============================
-   ORDER 1 ---> 1 SHIPMENT
-============================ */
-Order.hasOne(Shipment, { foreignKey: "order_id" });
-Shipment.belongsTo(Order, { foreignKey: "order_id" });
+// ------------------------------------------------------------
+// ORDER → PAYMENT (1 : 1)
+// ------------------------------------------------------------
+Order.hasOne(Payment, {
+  foreignKey: "order_id",
+  onDelete: "CASCADE",
+});
+Payment.belongsTo(Order, {
+  foreignKey: "order_id",
+});
 
-/* ============================================================
-   🔚 EXPORT SEMUA MODEL + INSTANCE SEQUELIZE
-============================================================ */
+// ------------------------------------------------------------
+// ORDER → SHIPMENT (1 : 1)
+// ------------------------------------------------------------
+Order.hasOne(Shipment, {
+  foreignKey: "order_id",
+  onDelete: "CASCADE",
+});
+Shipment.belongsTo(Order, {
+  foreignKey: "order_id",
+});
+
+// ============================================================
+// 🔚 EXPORT SEMUA MODEL
+// ============================================================
 module.exports = {
   sequelize,
   User,
+  UserAddress,
   Category,
   Brand,
   Product,

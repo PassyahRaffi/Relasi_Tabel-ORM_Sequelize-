@@ -1,8 +1,10 @@
+// backend/models/Category.js
+
 const { DataTypes } = require("sequelize");
 const sequelize = require("../db");
 
-const ProductMedia = sequelize.define(
-  "ProductMedia",
+const Category = sequelize.define(
+  "Category",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -10,25 +12,21 @@ const ProductMedia = sequelize.define(
       primaryKey: true,
     },
 
-    product_id: {
-      type: DataTypes.INTEGER,
+    name: {
+      type: DataTypes.STRING(100),
       allowNull: false,
     },
 
-    media_type: {
-      type: DataTypes.STRING(20),
+    slug: {
+      type: DataTypes.STRING(120),
       allowNull: false,
-    },
-
-    url: {
-      type: DataTypes.TEXT,
-      allowNull: false,
+      unique: true,
     },
   },
   {
-    tableName: "product_media",
+    tableName: "categories",   // ⚠ wajib: sama persis dengan nama tabel di Postgres
     timestamps: false,
   }
 );
 
-module.exports = ProductMedia;
+module.exports = Category;
