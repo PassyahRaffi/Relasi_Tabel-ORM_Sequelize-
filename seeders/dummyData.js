@@ -19,7 +19,7 @@ async function seedAll() {
   // -------------------------------
   // 1. USERS
   // -------------------------------
-  const users = await User.bulkCreate([
+  await User.bulkCreate([
     {
       id: 1,
       full_name: "Rizky Saputra",
